@@ -3,44 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Supriya ❤️</title>
+<title>A ❤️ S</title>
+
 <style>
 body{
     margin:0;
     font-family:'Segoe UI',sans-serif;
     background:linear-gradient(135deg,#ff758c,#ff7eb3);
     text-align:center;
-    overflow-y:auto;
+    overflow-x:hidden;
     color:white;
+    animation:fadeIn 1.5s ease-in-out;
 }
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
-/* Container */
 .container{
     padding:20px;
     min-height:100vh;
     box-sizing:border-box;
 }
 
-/* Typewriter */
 .typewriter{
     font-size:1.4em;
     margin:15px 0;
     min-height:40px;
 }
 
-/* Buttons */
 button{
     padding:12px 25px;
     border:none;
     border-radius:30px;
     cursor:pointer;
-    margin:15px;
-    font-size:1.2em;
+    margin:10px;
+    font-size:1.1em;
     transition:0.3s;
 }
 button:hover{transform:scale(1.1);}
 .primary{background:white;color:#ff4b7d;}
-.danger{background:#ff4b7d;color:white;}
+.danger{
+    background:#ff4b7d;
+    color:white;
+    animation:pulse 2s infinite;
+}
+@keyframes pulse{
+    0%{box-shadow:0 0 0 0 rgba(255,75,125,0.7);}
+    70%{box-shadow:0 0 0 15px rgba(255,75,125,0);}
+    100%{box-shadow:0 0 0 0 rgba(255,75,125,0);}
+}
 
 /* Love Meter */
 .meter{
@@ -57,31 +66,33 @@ button:hover{transform:scale(1.1);}
     background:red;
     transition:1s;
 }
+.fill.full{box-shadow:0 0 15px red;}
 
-/* Floating Hearts & Petals */
-.heart, .petal{
+/* Floating hearts */
+.heart{
     position:fixed;
     bottom:-10px;
     animation:float 6s linear infinite;
     z-index:5;
 }
 @keyframes float{
-    to{transform:translateY(-100vh) rotate(360deg);opacity:0;}
+    to{transform:translateY(-110vh) rotate(360deg);opacity:0;}
 }
 
-/* Gift Surprise */
+/* Gift */
 .gift{
     font-size:50px;
     cursor:pointer;
     margin-top:15px;
 }
+.gift:hover{transform:scale(1.2);}
 #surpriseMessage{
     display:none;
     font-size:1.3em;
     margin-top:10px;
 }
 
-/* Love Cards */
+/* Cards */
 .card-container{
     display:flex;
     justify-content:center;
@@ -94,6 +105,7 @@ button:hover{transform:scale(1.1);}
     height:200px;
     perspective:1000px;
     cursor:pointer;
+    position:relative;
 }
 .card div{
     width:100%;
@@ -107,19 +119,77 @@ button:hover{transform:scale(1.1);}
     backface-visibility:hidden;
     transition: transform 0.6s;
     overflow:hidden;
+    position:absolute;
 }
 .card .front{background:#ff4b7d;}
-.card .back{background:#ff758c; transform:rotateY(180deg); position:absolute; top:0; left:0;}
+.card .back{
+    background:#ff758c;
+    transform:rotateY(180deg);
+}
 .card.flipped .front{transform:rotateY(180deg);}
 .card.flipped .back{transform:rotateY(0);}
 
-/* NO button initial position */
-#noBtn{
-    position:relative;
+/* Valentine Calendar */
+.valentine-calendar{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:15px;
+    margin:30px 0;
+}
+.day{
+    background:white;
+    color:#ff4b7d;
+    padding:15px;
+    width:150px;
+    border-radius:15px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+}
+.day span{
+    display:block;
+    font-size:0.8em;
+    margin-top:5px;
+}
+.day:hover{
+    transform:scale(1.1);
+    background:#ffe6f0;
+}
+.special{
+    background:#ff4b7d;
+    color:white;
+    box-shadow:0 0 15px white;
+}
+
+/* Popup */
+#messagePopup{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:white;
+    color:#ff4b7d;
+    padding:25px;
+    border-radius:20px;
+    width:80%;
+    max-width:400px;
+    box-shadow:0 0 25px rgba(0,0,0,0.3);
+    display:none;
+    z-index:1000;
+    font-size:1.1em;
+}
+#closePopup{
+    margin-top:15px;
+    background:#ff4b7d;
+    color:white;
 }
 </style>
 </head>
+
 <body>
+
+<audio id="bgMusic" src="images/music.mp3" loop></audio>
 
 <div class="container">
 
@@ -128,7 +198,7 @@ button:hover{transform:scale(1.1);}
 <div class="typewriter" id="typewriter"></div>
 
 <button class="primary" onclick="newMessage()">Show More Love 💌</button>
-<div class="message-box" id="messageBox"></div>
+<div id="messageBox"></div>
 
 <div class="meter">
     <div class="fill" id="loveFill"></div>
@@ -144,30 +214,78 @@ button:hover{transform:scale(1.1);}
 <div class="card-container">
   <div class="card" onclick="flipCard(this)">
     <div class="front">I ❤️ You 💖</div>
-    <div class="back"><img src="images/love1.jpg" alt="Love1" style="width:100%;height:100%;border-radius:15px;"></div>
+    <div class="back"><img src="images/love1.jpg" style="width:100%;height:100%;border-radius:15px;"></div>
   </div>
   <div class="card" onclick="flipCard(this)">
     <div class="front">Your Smile 😍</div>
-    <div class="back"><img src="images/love2.jpg" alt="Love2" style="width:100%;height:100%;border-radius:15px;"></div>
+    <div class="back"><img src="images/love2.jpg" style="width:100%;height:100%;border-radius:15px;"></div>
   </div>
   <div class="card" onclick="flipCard(this)">
     <div class="front">Memory 💕</div>
-    <div class="back"><img src="images/love3.jpg" alt="Memory" style="width:100%;height:100%;border-radius:15px;"></div>
+    <div class="back"><img src="images/love3.jpg" style="width:100%;height:100%;border-radius:15px;"></div>
   </div>
   <div class="card" onclick="flipCard(this)">
     <div class="front">Sweetness 🍬</div>
-    <div class="back"><img src="images/love4.jpg" alt="Sweetness" style="width:100%;height:100%;border-radius:15px;"></div>
+    <div class="back"><img src="images/love4.jpg" style="width:100%;height:100%;border-radius:15px;"></div>
   </div>
 </div>
 
+<h2>Valentine Week Special 💕</h2>
+
+<div class="valentine-calendar">
+  <div class="day" onclick="openDay(0)">🌹 Rose Day<br><span>Feb 7</span></div>
+  <div class="day" onclick="openDay(1)">💍 Propose Day<br><span>Feb 8</span></div>
+  <div class="day" onclick="openDay(2)">🍫 Chocolate Day<br><span>Feb 9</span></div>
+  <div class="day" onclick="openDay(3)">🧸 Teddy Day<br><span>Feb 10</span></div>
+  <div class="day" onclick="openDay(4)">🤝 Promise Day<br><span>Feb 11</span></div>
+  <div class="day" onclick="openDay(5)">🤗 Hug Day<br><span>Feb 12</span></div>
+  <div class="day" onclick="openDay(6)">😘 Kiss Day<br><span>Feb 13</span></div>
+  <div class="day special" onclick="openDay(7)">❤️ Valentine’s Day<br><span>Feb 14</span></div>
+</div>
+
+<div id="messagePopup">
+    <div id="popupText"></div>
+    <button id="closePopup" onclick="closePopup()">Close ❤️</button>
+</div>
+
+<h2>Ankush ❤️ Supriya</h2>
 <h2>Will you marry me? 💍</h2>
 <button class="danger" id="yesBtn">YES 😍</button>
 <button class="primary" id="noBtn">NO 😜</button>
 
 </div>
+<div id="proposalPopup" style="
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:white;
+color:#ff4b7d;
+padding:30px;
+border-radius:20px;
+width:85%;
+max-width:420px;
+box-shadow:0 0 30px rgba(0,0,0,0.3);
+display:none;
+z-index:3000;
+font-size:1.2em;
+text-align:center;
+">
+<div id="proposalMessage"></div>
+<button onclick="closeProposal()" style="
+margin-top:20px;
+background:#ff4b7d;
+color:white;
+padding:10px 20px;
+border:none;
+border-radius:20px;
+cursor:pointer;
+">Forever ❤️</button>
+</div>
 
 <script>
-// Typewriter effect
+
+/* Typewriter */
 const text="Supriya, from the moment you came into my life, everything changed. I love you ❤️";
 let i=0;
 function typeEffect(){
@@ -179,71 +297,55 @@ function typeEffect(){
 }
 typeEffect();
 
-// Love messages
+/* Random Love Message */
 const messages=[
 "Supriya, you are my sunshine ☀️",
 "Life feels magical with you ✨",
-"I love your smile more than anything 😍",
-"You are my favorite notification ❤️",
 "You are my forever 💍",
-"You make my world beautiful 🌎💕",
 "I still get butterflies thinking about you 🦋"
 ];
 function newMessage(){
+    document.getElementById("bgMusic").play();
     const random=messages[Math.floor(Math.random()*messages.length)];
     document.getElementById("messageBox").innerHTML=random;
 }
 
-// Love Meter
+/* Love Meter */
 let love=0;
 function increaseLove(){
+    document.getElementById("bgMusic").play();
     if(love<100){
         love+=20;
         document.getElementById("loveFill").style.width=love+"%";
     }
+    if(love>=100){
+        document.getElementById("loveFill").classList.add("full");
+        launchConfetti();
+    }
 }
 
-// Gift
+/* Gift */
 function openGift(){
+    document.getElementById("bgMusic").play();
     document.getElementById("surpriseMessage").style.display="block";
     launchConfetti();
 }
 
-// Cards flip
+/* Flip Card */
 function flipCard(card){ card.classList.toggle('flipped'); }
 
-// NO button runs away
+/* Proposal Buttons */
 const noBtn=document.getElementById("noBtn");
 noBtn.addEventListener("mouseover",()=>{
     noBtn.style.position="absolute";
-    noBtn.style.left=Math.random()*80+"%";
-    noBtn.style.top=Math.random()*80+"%";
+    noBtn.style.left=Math.random()*(window.innerWidth-120)+"px";
+    noBtn.style.top=Math.random()*(window.innerHeight-60)+"px";
+});
+document.getElementById("yesBtn").addEventListener("click",()=>{
+    document.getElementById("bgMusic").play();
 });
 
-// YES button proposal
-const yesBtn=document.getElementById("yesBtn");
-yesBtn.addEventListener("click",()=>{
-    for(let i=0;i<50;i++){
-        const heart=document.createElement("div");
-        heart.innerHTML=Math.random()>0.5?"❤️":"🌸";
-        heart.style.position="fixed";
-        heart.style.left=Math.random()*100+"vw";
-        heart.style.top=Math.random()*100+"vh";
-        heart.style.fontSize=Math.random()*30+15+"px";
-        document.body.appendChild(heart);
-        setTimeout(()=>heart.remove(),4000);
-    }
-    document.getElementById("loveFill").style.width="100%";
-    document.body.innerHTML=`
-    <div style="height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background:linear-gradient(135deg,#ff758c,#ff7eb3);color:white;">
-        <h1 style="font-size:3em;">💖 Supriya 💖</h1>
-        <h2 style="font-size:2em;">Will You Marry Me? 💍</h2>
-        <p style="font-size:1.2em;margin-top:15px;">I promise to love you forever and always ❤️</p>
-    </div>`;
-    launchConfetti();
-});
-
-// Floating hearts & petals
+/* Floating Hearts */
 function createHeart(){
     const heart=document.createElement("div");
     heart.classList.add("heart");
@@ -253,13 +355,13 @@ function createHeart(){
     document.body.appendChild(heart);
     setTimeout(()=>heart.remove(),6000);
 }
-setInterval(createHeart,300);
+setInterval(createHeart,400);
 
-// Confetti animation
+/* Confetti */
 function launchConfetti(){
-    for(let i=0;i<50;i++){
+    for(let i=0;i<40;i++){
         const conf=document.createElement("div");
-        conf.innerHTML="🎉";
+        conf.innerHTML="❤️";
         conf.style.position="fixed";
         conf.style.left=Math.random()*100+"vw";
         conf.style.top=Math.random()*100+"vh";
@@ -268,6 +370,75 @@ function launchConfetti(){
         setTimeout(()=>conf.remove(),3000);
     }
 }
+
+/* Valentine Messages */
+const valentineMessages = [
+
+"🌹 Rose Day (Feb 7)\n\nI was a little hurt this Rose Day because I wanted to see you… even for a moment. But maybe love is not about perfect days — it’s about choosing each other even when days aren’t perfect. So here’s my rose again. 🌹",
+
+"💍 Propose Day (Feb 8)\n\nSeven years ago we started something beautiful. Last year on this day you were already mine… and still I want to say it again — I choose you. Not because everything is easy, but because my heart feels home with you.",
+
+"🍫 Chocolate Day (Feb 9)\n\nLife has sweet days and slightly bitter ones too. These past few days felt a little bitter for me… but even then, loving you has always been the sweetest part of my life.",
+
+"🧸 Teddy Day (Feb 10)\n\nEven when we are not meeting, even when I miss you more than I show, my heart still holds you tightly. Distance never changed my love — it only made me realize how deeply I care.",
+
+"🤝 Promise Day (Feb 11)\n\nI promise to talk when I’m hurt instead of staying silent. I promise to understand you even when I don’t feel understood. And I promise that no small gap will ever be bigger than our 7 years together.",
+
+"🤗 Hug Day (Feb 12)\n\nIf I could, I would just hug you without saying anything. No complaints. No ego. Just us. Because at the end of the day, that’s all that really matters.",
+
+"😘 Kiss Day (Feb 13)\n\nWe’ve grown together for almost 7 years. We’ve seen good days, tough days, and everything in between. And still… when I think about my future, it’s only you.",
+
+"❤️ Valentine’s Day (Feb 14)\n\nLast year on this day, we got engaged.\n\nThis year, even with misunderstandings, even with distance… I still want to marry you.\n\nNot because love is perfect.\nBut because I know you are my person.\n\nForever. 💍"
+
+];
+
+
+function openDay(index){
+    document.getElementById("bgMusic").play();
+    document.getElementById("popupText").innerHTML=valentineMessages[index];
+    document.getElementById("messagePopup").style.display="block";
+
+    if(index===7){
+        launchConfetti();
+    }
+}
+
+function closePopup(){
+    document.getElementById("messagePopup").style.display="none";
+}
+document.getElementById("yesBtn").addEventListener("click",()=>{
+    document.getElementById("bgMusic").play();
+});
+function closeProposal(){
+    document.getElementById("proposalPopup").style.display="none";
+}
+document.getElementById("yesBtn").addEventListener("click",()=>{
+    document.getElementById("bgMusic").play();
+
+    document.getElementById("proposalMessage").innerHTML =
+    "Supriya ❤️<br><br>" +
+    "Seven years of loving you.<br>" +
+    "One engagement last Valentine’s Day.<br><br>" +
+    "Even in misunderstandings,<br>" +
+    "even in distance,<br>" +
+    "my heart never chose anyone else.<br><br>" +
+    "Will you marry me and build forever with me? 💍";
+
+    document.getElementById("proposalPopup").style.display = "block";
+
+});
+let musicStarted = false;
+
+function startMusic(){
+    if(!musicStarted){
+        const music = document.getElementById("bgMusic");
+        music.volume = 0.4; // soft romantic volume
+        music.play();
+        musicStarted = true;
+    }
+}
+
+document.addEventListener("click", startMusic);
 </script>
 
 </body>
